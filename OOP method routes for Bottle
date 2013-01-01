@@ -6,8 +6,8 @@
 """
 OOP method routes for Bottle.
 
-Allows the creation of object like webapp2.RequestHandler to route requests
-via method.
+Allows the creation of a object (similar to a child of webapp2.RequestHandler) to 
+route requests via their HTTP method.
 
 USAGE:
     >>> from bottle-methods import Methods, app
