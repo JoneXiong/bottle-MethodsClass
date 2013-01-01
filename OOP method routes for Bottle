@@ -16,7 +16,8 @@ USAGE:
     ...     def get(self):
     ...         return "Hello World"
 
-    >>> app.run(host='localhost', port=8080)"""
+    >>> app.run(host='localhost', port=8080)
+"""
 from bottle import Bottle
 
 # The HTTP methods allowed
