@@ -1,0 +1,38 @@
+
+# Copyright (c) 2012, Luke Southam <luke@devthe.com>
+# All rights reserved.
+# http://opensource.org/licenses/BSD-3-Clause
+"""
+OOP method routes for Bottle
+"""
+from bottle import Bottle
+
+METHODS = ["get", "post", "put", "delete"]  # Lower case for PEP8 method names
+
+class MethodsMeta(type):
+    def __new__(cls, name, bases, attrs):
+        if 'route' in attrs: # to allow inheritance
+            route = attrs['route']
+            for key, value in attrs.iteritems():
+                if key.lower() in METHODS:
+                    # allows self arg in methods
+                    add_cls = lambda *args, **kwargs: value(cls, *args, **kwargs)
+                    attrs[key] = app.route(route, method=key.upper())(add_cls)
+        return super(MethodsMeta, cls).__new__(cls, name, bases, attrs)
+
+class Methods(object):
+    __metaclass__ = MethodsMeta
+
+app = Bottle()
+
+############ USAGE
+
+#from bottle-methods import Methods, app  ## import if in other module
+
+class IndexHandler(Methods):
+    route = '/'
+    def get(self):
+        return "Hello World"
+        
+
+app.run(host='localhost', port=8080)
