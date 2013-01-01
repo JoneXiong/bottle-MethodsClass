@@ -32,7 +32,7 @@ class MethodsMeta(type):
             # Get the given route
             route = attrs['route']
 
-            # Go through the classes attributes
+            # Go through the class's attributes
             for key, value in attrs.iteritems():
                 # Only add decorator if HTTP method.
                 # Allow uppercase methods but don't recommend it.
