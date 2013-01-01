@@ -9,14 +9,15 @@ Allows the creation of a object (similar to a child of webapp2.RequestHandler)
 to route requests via their HTTP method.
 
 USAGE:
-    >>> from bottle-methods import Methods, app
+    >>> from bottle_methods import Methods, app
 
-    >>> class IndexHandler(Methods):
-    ...     route = '/'
-    ...     def get(self):
-    ...         return "Hello World"
+    >>> class HelloHandler(Methods):
+    ...     route = ['/', /<name>']
+    ...     def get(self, name=None):
+    ...         name = name if name else "World"
+    ...         return "Hello %s !" % name.title()
 
-    >>> app.run(host='localhost', port=8080)
+    >>> app.run()
 """
 from bottle import Bottle
 
@@ -32,7 +33,10 @@ class MethodsMeta(type):
         The route is set via self.route ."""
         if 'route' in attrs:  # to allow inheritance
             # Get the given route
-            route = attrs['route']
+            # or routes if a list is provided
+            routes = attrs['route']\
+                    if isinstance(attrs['route'], list)\
+                    else [attrs['route']]
 
             # Go through the class's attributes
             for key, value in attrs.iteritems():
@@ -40,11 +44,13 @@ class MethodsMeta(type):
                 # Allow uppercase methods but don't recommend it.
                 if key.lower() in METHODS:
                     # Allows self arg in methods otherwise not passed
-                    add_cls = lambda * \
-                        args, **kwargs: value(cls, *args, **kwargs)
-                    # Add the decorator here, also the 'value' funtion is modifyed
-                    # based on the last comment.
-                    attrs[key] = app.route(route, method=key.upper())(add_cls)
+                    add_cls = lambda *args, **kwargs: value(cls,
+                                                            *args, **kwargs)
+                    # Make it possible for multiple routes
+                    for route in routes:
+                        # Add the decorator here, also the 'value' funtion is modifyed
+                        # based on the 2nd to last comment.
+                        attrs[key] = app.route(route, method=key.upper())(add_cls)
         return super(MethodsMeta, cls).__new__(cls, name, bases, attrs)
 
 
@@ -53,4 +59,3 @@ class Methods(object):
     __metaclass__ = MethodsMeta
 
 app = Bottle()
-
