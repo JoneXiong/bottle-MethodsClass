@@ -48,7 +48,7 @@ class MethodsMeta(type):
                                                             *args, **kwargs)
                     # Make it possible for multiple routes
                     for route in routes:
-                        # Add the decorator here, also the 'value' funtion is modifyed
+                        # Add the decorator here, also the 'value' function is modified
                         # based on the 2nd to last comment.
                         attrs[key] = app.route(route, method=key.upper())(add_cls)
         return super(MethodsMeta, cls).__new__(cls, name, bases, attrs)
