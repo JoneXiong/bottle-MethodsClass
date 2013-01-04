@@ -12,7 +12,7 @@ USAGE:
     >>> from bottle_methods import Methods, app
 
     >>> class HelloHandler(Methods):
-    ...     route = ['/', /<name>']
+    ...     route = ['/', '/<name>']
     ...     def get(self, name=None):
     ...         name = name if name else "World"
     ...         return "Hello %s !" % name.title()
